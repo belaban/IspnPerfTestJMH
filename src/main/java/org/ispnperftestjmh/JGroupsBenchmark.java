@@ -53,12 +53,10 @@ public class JGroupsBenchmark extends ReceiverAdapter {
         Util.close(ch);
     }
 
-   /* @Benchmark
+    @Benchmark
     @BenchmarkMode({Mode.Throughput}) @OutputTimeUnit(TimeUnit.SECONDS)
-    @Fork(value=1)*/
+    @Fork(value=1)
     public void testMethod() throws Exception {
-        // This is a demo/sample template for building your JMH benchmarks. Edit as needed.
-        // Put your benchmark code here.
         MethodCall call=new MethodCall((short)1);
         RspList<Integer> rsps=disp.callRemoteMethods(null, call, RequestOptions.SYNC());
         // System.out.printf("%d rsps: %s\n", rsps.size(), rsps);
@@ -74,12 +72,8 @@ public class JGroupsBenchmark extends ReceiverAdapter {
     public static void main(String[] args) throws Exception {
         JGroupsBenchmark b=new JGroupsBenchmark();
         b.setup();
-        //for(int i=1; i <= 10; i++) {
-          //  b.testMethod();
-        //}
         System.out.println("-- started as server");
         Util.keyPress("enter to terminate");
-
         b.destroy();
     }
 

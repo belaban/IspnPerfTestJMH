@@ -65,7 +65,7 @@ public class HcBenchmark {
         hc.shutdown();
     }
 
-   // @Benchmark
+    @Benchmark
     @BenchmarkMode({Mode.Throughput}) @OutputTimeUnit(TimeUnit.SECONDS)
     @Fork(value=1)
     @Warmup(time=10,timeUnit=TimeUnit.SECONDS)
