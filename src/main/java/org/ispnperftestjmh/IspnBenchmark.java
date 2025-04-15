@@ -8,10 +8,6 @@ import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.notifications.Listener;
 import org.infinispan.notifications.cachemanagerlistener.annotation.ViewChanged;
 import org.infinispan.notifications.cachemanagerlistener.event.ViewChangedEvent;
-import org.infinispan.remoting.transport.Transport;
-import org.infinispan.remoting.transport.jgroups.JGroupsTransport;
-import org.jgroups.Channel;
-import org.jgroups.View;
 import org.jgroups.util.Util;
 import org.openjdk.jmh.annotations.*;
 
@@ -29,7 +25,7 @@ public class IspnBenchmark {
     protected static final int           msg_size=1000;
     protected static final int           num_keys=20000; // [1 .. num_keys]
     protected byte[]                     BUFFER=new byte[msg_size];
-    protected static final String        cfg="infinispan.xml";
+    protected static final String        cfg="dist-sync.xml";
     protected static final double        read_percentage=0.8;
     protected final AtomicInteger        num_reads=new AtomicInteger(0), num_writes=new AtomicInteger(0);
 
@@ -39,7 +35,7 @@ public class IspnBenchmark {
         mgr=new DefaultCacheManager(cfg);
         mgr.addListener(this);
 
-        Cache<Integer,byte[]> c=mgr.getCache("ispn_cache");
+        Cache<Integer,byte[]> c=mgr.getCache("perf-cache");
         // for a put(), we don't need the previous value
         this.cache=c.getAdvancedCache().withFlags(Flag.IGNORE_RETURN_VALUES);
 
@@ -68,7 +64,7 @@ public class IspnBenchmark {
         // Put your benchmark code here.
 
         // get a random key in range [1 .. num_keys]
-        int key=(int)Util.random(num_keys) -1;
+        int key=Util.random(num_keys) -1;
         boolean is_this_a_read=Util.tossWeightedCoin(read_percentage);
 
         if(is_this_a_read) {
@@ -95,14 +91,7 @@ public class IspnBenchmark {
 
     @ViewChanged
     public static void viewChanged(ViewChangedEvent evt) {
-        Transport transport=evt.getCacheManager().getTransport();
-        if(transport instanceof JGroupsTransport) {
-            Channel ch=((JGroupsTransport)transport).getChannel();
-            View view=ch.getView();
-            System.out.println("** view: " + view);
-        }
-        else
-            System.out.println("** view: " + evt);
+        System.out.printf("-- joined: %s, left: %s\n", evt.getNewMembers(), evt.getOldMembers());
     }
 
 }

@@ -2,7 +2,7 @@
 package org.ispnperftestjmh;
 
 import org.jgroups.JChannel;
-import org.jgroups.ReceiverAdapter;
+import org.jgroups.Receiver;
 import org.jgroups.View;
 import org.jgroups.blocks.MethodCall;
 import org.jgroups.blocks.RequestOptions;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(timeUnit=TimeUnit.SECONDS,iterations=10)
 // @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Threads(25)
-public class JGroupsBenchmark extends ReceiverAdapter {
+public class JGroupsBenchmark implements Receiver {
     protected JChannel ch;
     protected RpcDispatcher disp;
     protected static final String cfg="/home/bela/fast.xml";
@@ -43,7 +43,7 @@ public class JGroupsBenchmark extends ReceiverAdapter {
     @Setup
     public void setup() throws Exception {
         ch=new JChannel(cfg);
-        disp=new RpcDispatcher(ch, null, this, this);
+        disp=new RpcDispatcher(ch, this);
         disp.setMethodLookup(id -> meth);
         ch.connect("jmh-demo");
     }
