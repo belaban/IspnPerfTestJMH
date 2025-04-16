@@ -19,14 +19,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Measurement(timeUnit=TimeUnit.MILLISECONDS,iterations=10)
 @Threads(25)
 // @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class IspnBenchmark {
+public class SimpleCacheBenchmark {
     protected EmbeddedCacheManager       mgr;
     protected Cache<Integer,byte[]>      cache;
     protected static final int           msg_size=1000;
     protected static final int           num_keys=20000; // [1 .. num_keys]
     protected byte[]                     BUFFER=new byte[msg_size];
-    protected static final String        cfg="dist-sync.xml";
-    protected static final double        read_percentage=0.8;
+    protected static final String        cfg="simple-cache.xml";
+    protected static final double        read_percentage=1.0;
     protected final AtomicInteger        num_reads=new AtomicInteger(0), num_writes=new AtomicInteger(0);
 
 
@@ -80,7 +80,7 @@ public class IspnBenchmark {
 
 
     public static void main(String[] args) throws Exception {
-        IspnBenchmark b=new IspnBenchmark();
+        SimpleCacheBenchmark b=new SimpleCacheBenchmark();
         b.setup();
         System.out.println("-- started as server");
         Util.keyPress("enter to terminate");
