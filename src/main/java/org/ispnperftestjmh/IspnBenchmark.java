@@ -26,9 +26,11 @@ public class IspnBenchmark {
     protected static final int           num_keys=20000; // [1 .. num_keys]
     protected byte[]                     BUFFER=new byte[msg_size];
     protected static final String        cfg="dist-sync.xml";
-    protected static final double        read_percentage=0.8;
     protected final AtomicInteger        num_reads=new AtomicInteger(0), num_writes=new AtomicInteger(0);
 
+    // this value can be changed, e.g. by passing -p "read_percentage=0.8,1.0" to the test runner
+    @Param("0.8")
+    protected double                     read_percentage;
 
     @Setup
     public void setup() throws Exception {
@@ -57,7 +59,7 @@ public class IspnBenchmark {
 
     @Benchmark
     @BenchmarkMode({Mode.Throughput}) @OutputTimeUnit(TimeUnit.MILLISECONDS)
-    @Fork(value=1)
+    @Fork(1)
     @Warmup(time=10,timeUnit=TimeUnit.SECONDS)
     public void testMethod() throws Exception {
         // This is a demo/sample template for building your JMH benchmarks. Edit as needed.
